@@ -1,0 +1,9 @@
+{
+  "name": "ai-food-scanner",
+  "private": true,
+  "workspaces": [
+    "mobile",
+    "web",
+    "packages/*"
+  ]
+}

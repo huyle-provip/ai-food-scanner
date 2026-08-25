@@ -1,0 +1,39 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.9375rem;
+}
+
+.signOut {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.main {
+  flex: 1;
+  padding: 1.5rem;
+}

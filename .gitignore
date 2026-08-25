@@ -1,3 +1,12 @@
+# Node / monorepo root
+node_modules/
+.env
+.env.local
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/
+
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore

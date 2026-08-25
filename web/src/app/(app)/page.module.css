@@ -1,0 +1,25 @@
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 480px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 0.875rem 1rem;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.meta {
+  font-size: 0.8125rem;
+  color: #555;
+}
