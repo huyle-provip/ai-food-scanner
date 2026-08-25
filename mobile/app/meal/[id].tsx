@@ -2,9 +2,9 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { NutrientForm, NutrientFormValue } from "../../components/NutrientForm";
-import { deleteDish, getDish, updateDish } from "../../lib/dishes";
+import { deleteMeal, getMeal, updateMeal } from "../../lib/meals";
 
-export default function DishDetailScreen() {
+export default function MealDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [value, setValue] = useState<NutrientFormValue | null>(null);
@@ -12,15 +12,15 @@ export default function DishDetailScreen() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getDish(id)
-      .then((dish) =>
+    getMeal(id)
+      .then((meal) =>
         setValue({
-          name: dish.name,
-          servingSizeGrams: String(dish.servingSizeGrams),
-          per100g: dish.per100g,
+          name: meal.name,
+          servingSizeGrams: String(meal.servingSizeGrams),
+          per100g: meal.per100g,
         })
       )
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load dish"));
+      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load meal"));
   }, [id]);
 
   if (error) {
@@ -42,7 +42,7 @@ export default function DishDetailScreen() {
   async function handleSave() {
     setSaving(true);
     try {
-      await updateDish(id, {
+      await updateMeal(id, {
         name: value!.name,
         servingSizeGrams: Number(value!.servingSizeGrams) || 0,
         per100g: value!.per100g,
@@ -56,13 +56,13 @@ export default function DishDetailScreen() {
   }
 
   function handleDelete() {
-    Alert.alert("Delete dish", "This can't be undone.", [
+    Alert.alert("Delete meal", "This can't be undone.", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
         style: "destructive",
         onPress: async () => {
-          await deleteDish(id);
+          await deleteMeal(id);
           router.back();
         },
       },
@@ -76,7 +76,7 @@ export default function DishDetailScreen() {
         <Text style={styles.buttonText}>{saving ? "Saving..." : "Save Changes"}</Text>
       </Pressable>
       <Pressable style={styles.deleteButton} onPress={handleDelete}>
-        <Text style={styles.deleteButtonText}>Delete Dish</Text>
+        <Text style={styles.deleteButtonText}>Delete Meal</Text>
       </Pressable>
     </ScrollView>
   );

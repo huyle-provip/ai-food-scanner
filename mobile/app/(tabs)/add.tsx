@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { NutrientForm, NutrientFormValue } from "../../components/NutrientForm";
-import { createDish } from "../../lib/dishes";
+import { createMeal } from "../../lib/meals";
 
 const empty: NutrientFormValue = {
   name: "",
@@ -17,12 +17,12 @@ export default function AddManuallyScreen() {
 
   async function handleSave() {
     if (!value.name.trim()) {
-      Alert.alert("Name required", "Give this dish a name before saving.");
+      Alert.alert("Name required", "Give this meal a name before saving.");
       return;
     }
     setSaving(true);
     try {
-      await createDish({
+      await createMeal({
         name: value.name.trim(),
         source: "manual",
         servingSizeGrams: Number(value.servingSizeGrams) || 0,
@@ -41,7 +41,7 @@ export default function AddManuallyScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <NutrientForm value={value} onChange={setValue} />
       <Pressable style={styles.button} onPress={handleSave} disabled={saving}>
-        <Text style={styles.buttonText}>{saving ? "Saving..." : "Save Dish"}</Text>
+        <Text style={styles.buttonText}>{saving ? "Saving..." : "Save Meal"}</Text>
       </Pressable>
     </ScrollView>
   );

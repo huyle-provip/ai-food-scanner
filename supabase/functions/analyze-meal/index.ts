@@ -1,8 +1,8 @@
 // Supabase Edge Function (Deno runtime): given a photo already uploaded to the
-// user's private `meal-photos` storage folder, identifies the dish with Claude
+// user's private `meal-photos` storage folder, identifies the meal with Claude
 // vision, looks up authoritative per-100g nutrients from USDA FoodData Central
 // when a match is found, and returns a draft for the client to review/edit
-// before it gets saved as a `dishes` row. Nothing is written to the database
+// before it gets saved as a `meals` row. Nothing is written to the database
 // here -- the client does that after the user confirms/edits the draft.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -178,14 +178,14 @@ async function estimateWithClaude(photoBase64: string): Promise<VisionEstimate> 
             {
               type: "text",
               text:
-                "You are a nutrition estimation assistant. Identify the dish in this photo and " +
+                "You are a nutrition estimation assistant. Identify the meal in this photo and " +
                 "estimate its nutrition. Respond with ONLY a JSON object (no markdown, no prose) " +
                 "matching this exact shape:\n" +
                 '{"name": string, "servingSizeGrams": number, "per100g": {"calories": number, ' +
                 '"proteinG": number, "carbsG": number, "fatG": number, "fiberG": number, ' +
                 '"sodiumMg": number}, "confidence": "low" | "medium" | "high", "notes": string}\n' +
                 "`servingSizeGrams` is your best estimate of the total plated portion weight in " +
-                "grams. `per100g` values are per 100 grams of the dish, not for the whole portion.",
+                "grams. `per100g` values are per 100 grams of the meal, not for the whole portion.",
             },
           ],
         },
@@ -206,11 +206,11 @@ async function estimateWithClaude(photoBase64: string): Promise<VisionEstimate> 
   return JSON.parse(jsonMatch[0]) as VisionEstimate;
 }
 
-async function lookupUsdaPer100g(dishName: string): Promise<NutrientProfile | null> {
+async function lookupUsdaPer100g(mealName: string): Promise<NutrientProfile | null> {
   try {
     const searchUrl = new URL("https://api.nal.usda.gov/fdc/v1/foods/search");
     searchUrl.searchParams.set("api_key", FDC_API_KEY);
-    searchUrl.searchParams.set("query", dishName);
+    searchUrl.searchParams.set("query", mealName);
     searchUrl.searchParams.set("pageSize", "1");
     searchUrl.searchParams.set("dataType", "Survey (FNDDS),SR Legacy");
 

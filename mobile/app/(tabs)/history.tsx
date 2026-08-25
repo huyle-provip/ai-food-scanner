@@ -1,4 +1,4 @@
-import { Dish } from "@food-scanner/shared";
+import { Meal } from "@food-scanner/shared";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -10,10 +10,10 @@ import {
   Text,
   View,
 } from "react-native";
-import { listDishes } from "../../lib/dishes";
+import { listMeals } from "../../lib/meals";
 
 export default function HistoryScreen() {
-  const [dishes, setDishes] = useState<Dish[]>([]);
+  const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -22,9 +22,9 @@ export default function HistoryScreen() {
     setLoading(true);
     setError(null);
     try {
-      setDishes(await listDishes());
+      setMeals(await listMeals());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load dishes");
+      setError(err instanceof Error ? err.message : "Failed to load meals");
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,7 @@ export default function HistoryScreen() {
     }, [load])
   );
 
-  if (loading && dishes.length === 0) {
+  if (loading && meals.length === 0) {
     return (
       <View style={styles.center}>
         <ActivityIndicator />
@@ -47,16 +47,16 @@ export default function HistoryScreen() {
   return (
     <FlatList
       contentContainerStyle={styles.list}
-      data={dishes}
+      data={meals}
       keyExtractor={(item) => item.id}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={load} />}
       ListEmptyComponent={
         <View style={styles.center}>
-          <Text>{error ?? "No saved dishes yet. Scan or add one to get started."}</Text>
+          <Text>{error ?? "No saved meals yet. Scan or add one to get started."}</Text>
         </View>
       }
       renderItem={({ item }) => (
-        <Pressable style={styles.card} onPress={() => router.push(`/dish/${item.id}`)}>
+        <Pressable style={styles.card} onPress={() => router.push(`/meal/${item.id}`)}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.meta}>
             {item.servingSizeGrams}g · {item.calories.toFixed(0)} kcal ·{" "}

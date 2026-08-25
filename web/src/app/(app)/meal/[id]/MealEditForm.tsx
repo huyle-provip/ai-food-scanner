@@ -1,26 +1,26 @@
 "use client";
 
-import { Dish } from "@food-scanner/shared";
+import { Meal } from "@food-scanner/shared";
 import { useTransition } from "react";
 import { NutrientForm } from "@/components/NutrientForm";
-import type { DishFormInput } from "@/lib/actions";
+import type { MealFormInput } from "@/lib/actions";
 import styles from "./page.module.css";
 
 interface Props {
-  dish: Dish;
-  updateAction: (input: DishFormInput) => Promise<void>;
+  meal: Meal;
+  updateAction: (input: MealFormInput) => Promise<void>;
   deleteAction: () => Promise<void>;
 }
 
-export function DishEditForm({ dish, updateAction, deleteAction }: Props) {
+export function MealEditForm({ meal, updateAction, deleteAction }: Props) {
   const [deleting, startDelete] = useTransition();
 
   return (
     <NutrientForm
       initialValue={{
-        name: dish.name,
-        servingSizeGrams: String(dish.servingSizeGrams),
-        per100g: dish.per100g,
+        name: meal.name,
+        servingSizeGrams: String(meal.servingSizeGrams),
+        per100g: meal.per100g,
       }}
       submitLabel="Save Changes"
       onSubmit={updateAction}
@@ -30,12 +30,12 @@ export function DishEditForm({ dish, updateAction, deleteAction }: Props) {
           className={styles.deleteButton}
           disabled={deleting}
           onClick={() => {
-            if (confirm("Delete this dish? This can't be undone.")) {
+            if (confirm("Delete this meal? This can't be undone.")) {
               startDelete(() => deleteAction());
             }
           }}
         >
-          {deleting ? "Deleting..." : "Delete Dish"}
+          {deleting ? "Deleting..." : "Delete Meal"}
         </button>
       }
     />

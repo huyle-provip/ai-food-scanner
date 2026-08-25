@@ -37,7 +37,7 @@ function Field({
   );
 }
 
-/** Edits a dish's name, serving size, and per-100g nutrients; shows the scaled totals for the current serving. */
+/** Edits a meal's name, serving size, and per-100g nutrients; shows the scaled totals for the current serving. */
 export function NutrientForm({ value, onChange }: Props) {
   const servingGrams = Number(value.servingSizeGrams) || 0;
   const scaled = scaleNutrients(value.per100g, servingGrams);

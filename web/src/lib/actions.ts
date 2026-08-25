@@ -5,13 +5,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "./supabase/server";
 
-export interface DishFormInput {
+export interface MealFormInput {
   name: string;
   servingSizeGrams: number;
   per100g: NutrientProfile;
 }
 
-export async function createManualDish(input: DishFormInput) {
+export async function createManualMeal(input: MealFormInput) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -19,7 +19,7 @@ export async function createManualDish(input: DishFormInput) {
   if (!user) redirect("/login");
 
   const scaled = scaleNutrients(input.per100g, input.servingSizeGrams);
-  const { error } = await supabase.from("dishes").insert({
+  const { error } = await supabase.from("meals").insert({
     user_id: user.id,
     name: input.name,
     source: "manual",
@@ -38,11 +38,11 @@ export async function createManualDish(input: DishFormInput) {
   redirect("/");
 }
 
-export async function updateDish(id: string, input: DishFormInput) {
+export async function updateMeal(id: string, input: MealFormInput) {
   const supabase = await createClient();
   const scaled = scaleNutrients(input.per100g, input.servingSizeGrams);
   const { error } = await supabase
-    .from("dishes")
+    .from("meals")
     .update({
       name: input.name,
       serving_size_grams: input.servingSizeGrams,
@@ -61,9 +61,9 @@ export async function updateDish(id: string, input: DishFormInput) {
   redirect("/");
 }
 
-export async function deleteDish(id: string) {
+export async function deleteMeal(id: string) {
   const supabase = await createClient();
-  const { error } = await supabase.from("dishes").delete().eq("id", id);
+  const { error } = await supabase.from("meals").delete().eq("id", id);
   if (error) throw error;
 
   revalidatePath("/");

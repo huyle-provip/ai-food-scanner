@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { NutrientForm, NutrientFormValue } from "../components/NutrientForm";
-import { createDish } from "../lib/dishes";
+import { createMeal } from "../lib/meals";
 import { takePendingScanDraft } from "../lib/draftStore";
 
 export default function ReviewScreen() {
@@ -10,7 +10,7 @@ export default function ReviewScreen() {
   const [pending] = useState(() => takePendingScanDraft());
   const [saving, setSaving] = useState(false);
   const [value, setValue] = useState<NutrientFormValue>(() => ({
-    name: pending?.draft.name ?? "Unknown dish",
+    name: pending?.draft.name ?? "Unknown meal",
     servingSizeGrams: String(pending?.draft.servingSizeGrams ?? 200),
     per100g: pending?.draft.per100g ?? {
       calories: 0,
@@ -33,7 +33,7 @@ export default function ReviewScreen() {
   async function handleSave() {
     setSaving(true);
     try {
-      await createDish({
+      await createMeal({
         name: value.name,
         source: "scan",
         photoUrl: pending!.photoUrl,
@@ -56,7 +56,7 @@ export default function ReviewScreen() {
       </Text>
       <NutrientForm value={value} onChange={setValue} />
       <Pressable style={styles.button} onPress={handleSave} disabled={saving}>
-        <Text style={styles.buttonText}>{saving ? "Saving..." : "Save Dish"}</Text>
+        <Text style={styles.buttonText}>{saving ? "Saving..." : "Save Meal"}</Text>
       </Pressable>
     </ScrollView>
   );

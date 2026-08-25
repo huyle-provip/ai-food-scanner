@@ -1,4 +1,4 @@
-export type DishSource = "scan" | "manual";
+export type MealSource = "scan" | "manual";
 
 export interface NutrientProfile {
   calories: number;
@@ -9,11 +9,11 @@ export interface NutrientProfile {
   sodiumMg: number;
 }
 
-export interface Dish {
+export interface Meal {
   id: string;
   userId: string;
   name: string;
-  source: DishSource;
+  source: MealSource;
   photoUrl: string | null;
   servingSizeGrams: number;
   per100g: NutrientProfile;
@@ -27,7 +27,7 @@ export interface Dish {
   sodiumMg: number;
 }
 
-/** Draft returned by the `analyze-meal` edge function, before the user confirms/edits and saves it as a Dish. */
+/** Draft returned by the `analyze-meal` edge function, before the user confirms/edits and saves it as a Meal. */
 export interface MealAnalysisDraft {
   name: string;
   servingSizeGrams: number;

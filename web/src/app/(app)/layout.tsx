@@ -11,7 +11,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           AI Food Scanner
         </Link>
         <nav className={styles.nav}>
-          <Link href="/">My Dishes</Link>
+          <Link href="/">My Meals</Link>
           <Link href="/add">Add Manually</Link>
           <form action={signOut}>
             <button type="submit" className={styles.signOut}>
