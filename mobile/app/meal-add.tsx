@@ -1,8 +1,8 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from "react-native";
-import { NutrientForm, NutrientFormValue } from "../../components/NutrientForm";
-import { createMeal } from "../../lib/meals";
+import { NutrientForm, NutrientFormValue } from "../components/NutrientForm";
+import { createMeal } from "../lib/meals";
 
 const empty: NutrientFormValue = {
   name: "",
@@ -10,7 +10,7 @@ const empty: NutrientFormValue = {
   per100g: { calories: 0, proteinG: 0, carbsG: 0, fatG: 0, fiberG: 0, sodiumMg: 0 },
 };
 
-export default function AddManuallyScreen() {
+export default function MealAddScreen() {
   const [value, setValue] = useState<NutrientFormValue>(empty);
   const [saving, setSaving] = useState(false);
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function AddManuallyScreen() {
         per100g: value.per100g,
       });
       setValue(empty);
-      router.push("/(tabs)/history");
+      router.back();
     } catch (err) {
       Alert.alert("Couldn't save", err instanceof Error ? err.message : "Unknown error");
     } finally {
