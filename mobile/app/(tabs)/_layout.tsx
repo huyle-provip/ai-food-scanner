@@ -8,7 +8,13 @@ function TabIcon({ label, color }: { label: string; color: ColorValue }) {
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: "#16a34a" }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#16a34a",
+        sceneStyle: { backgroundColor: "#F7F7F7" },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{

@@ -4,7 +4,7 @@ import { AuthProvider } from "../contexts/AuthContext";
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#F7F7F7" } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="login" options={{ headerShown: true, title: "Sign In", presentation: "modal" }} />
         <Stack.Screen name="recipe/[id]" options={{ headerShown: true, title: "Recipe" }} />
