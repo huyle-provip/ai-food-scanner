@@ -1,5 +1,5 @@
 .container {
-  min-height: 100%;
+  min-height: 65vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,13 +44,27 @@
   cursor: default;
 }
 
+.switchRow {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #374151;
+  margin-top: 0.25rem;
+}
+
 .switch {
   background: none;
   border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
   color: #16a34a;
-  font-size: 0.875rem;
   cursor: pointer;
-  padding: 0.25rem;
+  transition: color 0.15s ease;
+}
+
+.switch:hover {
+  color: #15803d;
+  text-decoration: underline;
 }
 
 .error {

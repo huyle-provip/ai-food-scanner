@@ -61,13 +61,16 @@ export default function LoginPage() {
         <button className={styles.button} type="submit" disabled={loading}>
           {loading ? "Please wait..." : mode === "sign-in" ? "Sign In" : "Sign Up"}
         </button>
-        <button
-          type="button"
-          className={styles.switch}
-          onClick={() => setMode(mode === "sign-in" ? "sign-up" : "sign-in")}
-        >
-          {mode === "sign-in" ? "Need an account? Sign up" : "Have an account? Sign in"}
-        </button>
+        <p className={styles.switchRow}>
+          {mode === "sign-in" ? "Need an account? " : "Have an account? "}
+          <button
+            type="button"
+            className={styles.switch}
+            onClick={() => setMode(mode === "sign-in" ? "sign-up" : "sign-in")}
+          >
+            {mode === "sign-in" ? "Sign up" : "Sign in"}
+          </button>
+        </p>
       </form>
     </div>
   );

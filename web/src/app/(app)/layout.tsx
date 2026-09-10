@@ -19,9 +19,19 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           AI Food Scanner
         </Link>
         <nav className={styles.nav}>
-          <Link href="/">Discover</Link>
-          {user ? <Link href="/library">Library</Link> : null}
-          {isAdmin ? <Link href="/admin">Admin</Link> : null}
+          <Link href="/" className={styles.link}>
+            Discover
+          </Link>
+          {user ? (
+            <Link href="/library" className={styles.link}>
+              Library
+            </Link>
+          ) : null}
+          {isAdmin ? (
+            <Link href="/admin" className={styles.link}>
+              Admin
+            </Link>
+          ) : null}
           {user ? (
             <form action={signOut}>
               <button type="submit" className={styles.signOut}>
@@ -29,7 +39,9 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
               </button>
             </form>
           ) : (
-            <Link href="/login">Sign In</Link>
+            <Link href="/login" className={styles.signIn}>
+              Sign In
+            </Link>
           )}
         </nav>
       </header>
