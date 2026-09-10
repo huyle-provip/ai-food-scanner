@@ -16,11 +16,11 @@ import { listPublishedRecipes } from "../../lib/recipes";
 export default function HomeFeedScreen() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const load = useCallback(async () => {
-    setLoading(true);
     setError(null);
     try {
       setRecipes(await listPublishedRecipes());
@@ -30,6 +30,12 @@ export default function HomeFeedScreen() {
       setLoading(false);
     }
   }, []);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await load();
+    setRefreshing(false);
+  }, [load]);
 
   useFocusEffect(
     useCallback(() => {
@@ -50,7 +56,7 @@ export default function HomeFeedScreen() {
       contentContainerStyle={styles.list}
       data={recipes}
       keyExtractor={(item) => item.id}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} />}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       ListHeaderComponent={<Text style={styles.header}>Discover</Text>}
       ListEmptyComponent={
         <View style={styles.center}>

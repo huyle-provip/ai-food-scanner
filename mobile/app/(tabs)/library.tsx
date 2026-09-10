@@ -45,11 +45,11 @@ function SignedInLibrary({ email }: { email: string }) {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const load = useCallback(async () => {
-    setLoading(true);
     setError(null);
     try {
       const [mealList, profile] = await Promise.all([listMeals(), getMyProfile()]);
@@ -62,6 +62,12 @@ function SignedInLibrary({ email }: { email: string }) {
     }
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await load();
+    setRefreshing(false);
+  }, [load]);
+
   useFocusEffect(
     useCallback(() => {
       load();
@@ -73,17 +79,13 @@ function SignedInLibrary({ email }: { email: string }) {
       contentContainerStyle={styles.list}
       data={meals}
       keyExtractor={(item) => item.id}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={load} />}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       ListHeaderComponent={
         <View style={styles.headerBlock}>
           <Text style={styles.title}>My Meals</Text>
           <Text style={styles.greeting}>{resolveDisplayName(displayName, email)}</Text>
           <Pressable style={styles.addButton} onPress={() => router.push("/meal-add")}>
             <Text style={styles.addButtonText}>+ Add manually</Text>
-          </Pressable>
-          <Pressable style={styles.settingRow} onPress={() => router.push("/settings")}>
-            <Text style={styles.settingText}>Settings</Text>
-            <Text style={styles.chevron}>›</Text>
           </Pressable>
           <View style={styles.settingRow}>
             <Text style={styles.settingText}>Diet preferences</Text>

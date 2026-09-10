@@ -1,17 +1,20 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Text, type ColorValue } from "react-native";
+import { BrandHeaderTitle, HeaderUserName } from "../../components/BrandHeader";
 import { ScanTabButton } from "../../components/ScanTabButton";
-
-function TabIcon({ label, color }: { label: string; color: ColorValue }) {
-  return <Text style={{ color, fontSize: 22 }}>{label}</Text>;
-}
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerTitle: () => <BrandHeaderTitle />,
+        headerTitleAlign: "left",
+        headerRight: () => <HeaderUserName />,
+        headerStyle: { backgroundColor: "#F7F7F7" },
+        headerShadowVisible: true,
         tabBarActiveTintColor: "#16a34a",
+        tabBarInactiveTintColor: "#6b7280",
         sceneStyle: { backgroundColor: "#F7F7F7" },
       }}
     >
@@ -19,21 +22,42 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <TabIcon label="⌂" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="scan"
-        options={{
-          title: "Scan",
-          tabBarButton: (props) => <ScanTabButton {...props} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="library"
         options={{
           title: "Library",
-          tabBarIcon: ({ color }) => <TabIcon label="☰" color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="library-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="scan"
+        options={{
+          title: "Scan",
+          headerShown: false,
+          tabBarButton: (props) => <ScanTabButton {...props} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings-outline" color={color} size={size} />
+          ),
         }}
       />
     </Tabs>
