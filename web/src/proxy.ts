@@ -38,9 +38,11 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";
+  const isPasswordFlow = pathname === "/forgot-password" || pathname === "/reset-password";
 
   // Public routes: the recipe feed, recipe detail pages, and the auth pages.
-  const isPublic = pathname === "/" || pathname.startsWith("/recipe/") || isAuthPage;
+  const isPublic =
+    pathname === "/" || pathname.startsWith("/recipe/") || isAuthPage || isPasswordFlow;
 
   // Everything else (library, meal editing, manual add, admin) needs a session.
   // The /admin subtree additionally checks `profiles.is_admin` in its own layout.

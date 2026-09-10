@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { signOut } from "@/lib/actions";
 import { isCurrentUserAdmin } from "@/lib/profile";
 import { createClient } from "@/lib/supabase/server";
@@ -16,7 +17,8 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     <div className={styles.wrapper}>
       <header className={styles.header}>
         <Link href="/" className={styles.brand}>
-          AI Food Scanner
+          <BrandLogo size={36} />
+          <span>AI Food Scanner</span>
         </Link>
         <nav className={styles.nav}>
           <Link href="/" className={styles.link}>
@@ -30,6 +32,11 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           {isAdmin ? (
             <Link href="/admin" className={styles.link}>
               Admin
+            </Link>
+          ) : null}
+          {user ? (
+            <Link href="/settings" className={styles.link}>
+              Settings
             </Link>
           ) : null}
           {user ? (

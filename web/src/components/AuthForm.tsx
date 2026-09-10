@@ -8,6 +8,7 @@ import styles from "./AuthForm.module.css";
 
 export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,11 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
       router.replace("/");
       router.refresh();
     } else {
-      const { error: authError } = await supabase.auth.signUp({ email, password });
+      const { error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { display_name: name.trim() } },
+      });
       setLoading(false);
       if (authError) return setError(authError.message);
       setNotice("Check your email to confirm your account, then sign in.");
@@ -41,6 +46,17 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h1 className={styles.title}>{isSignIn ? "Sign in" : "Create an account"}</h1>
+        {!isSignIn && (
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Your name"
+            value={name}
+            maxLength={40}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        )}
         <input
           className={styles.input}
           type="email"
@@ -62,6 +78,13 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
         <button className={styles.button} type="submit" disabled={loading}>
           {loading ? "Please wait..." : isSignIn ? "Sign In" : "Sign Up"}
         </button>
+        {isSignIn && (
+          <p className={styles.switchRow}>
+            <Link className={styles.switch} href="/forgot-password">
+              Forgot password?
+            </Link>
+          </p>
+        )}
         <p className={styles.switchRow}>
           {isSignIn ? "Need an account? " : "Have an account? "}
           <Link className={styles.switch} href={isSignIn ? "/signup" : "/login"}>

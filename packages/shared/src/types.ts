@@ -1,5 +1,18 @@
 export type MealSource = "scan" | "manual";
 
+export interface Profile {
+  id: string;
+  displayName: string | null;
+  isAdmin: boolean;
+}
+
+/** The name to show for a user: their display name, or the email prefix as a fallback. */
+export function resolveDisplayName(displayName: string | null | undefined, email: string): string {
+  const trimmed = displayName?.trim();
+  if (trimmed) return trimmed;
+  return email.split("@")[0] || "You";
+}
+
 export interface NutrientProfile {
   calories: number;
   proteinG: number;
