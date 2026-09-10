@@ -1,4 +1,5 @@
-import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { GestureResponderEvent, Pressable, StyleSheet, View } from "react-native";
 
 // Structural subset of react-navigation's BottomTabBarButtonProps (not re-exported
 // from the `expo-router` entry). The full props object is spread in from
@@ -6,6 +7,19 @@ import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-
 interface ScanTabButtonProps {
   onPress?: (e: GestureResponderEvent) => void;
   accessibilityState?: { selected?: boolean };
+}
+
+/** White camera glyph inside a corner-bracket "scan frame". */
+function ScanGlyph() {
+  return (
+    <View style={styles.glyph}>
+      <View style={[styles.corner, styles.tl]} />
+      <View style={[styles.corner, styles.tr]} />
+      <View style={[styles.corner, styles.bl]} />
+      <View style={[styles.corner, styles.br]} />
+      <Ionicons name="camera" size={20} color="#fff" />
+    </View>
+  );
 }
 
 /**
@@ -22,11 +36,14 @@ export function ScanTabButton({ onPress, accessibilityState }: ScanTabButtonProp
         onPress={(e) => onPress?.(e)}
         style={[styles.button, focused && styles.buttonFocused]}
       >
-        <Text style={styles.icon}>◎</Text>
+        <ScanGlyph />
       </Pressable>
     </View>
   );
 }
+
+const LINE = 2.5;
+const CORNER = 8;
 
 const styles = StyleSheet.create({
   wrap: {
@@ -50,5 +67,27 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
   },
   buttonFocused: { backgroundColor: "#15803d" },
-  icon: { color: "#fff", fontSize: 28, lineHeight: 30 },
+  glyph: { width: 30, height: 30, alignItems: "center", justifyContent: "center" },
+  corner: {
+    position: "absolute",
+    width: CORNER,
+    height: CORNER,
+    borderColor: "#fff",
+  },
+  tl: { top: 0, left: 0, borderTopWidth: LINE, borderLeftWidth: LINE, borderTopLeftRadius: 3 },
+  tr: { top: 0, right: 0, borderTopWidth: LINE, borderRightWidth: LINE, borderTopRightRadius: 3 },
+  bl: {
+    bottom: 0,
+    left: 0,
+    borderBottomWidth: LINE,
+    borderLeftWidth: LINE,
+    borderBottomLeftRadius: 3,
+  },
+  br: {
+    bottom: 0,
+    right: 0,
+    borderBottomWidth: LINE,
+    borderRightWidth: LINE,
+    borderBottomRightRadius: 3,
+  },
 });
