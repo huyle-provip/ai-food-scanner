@@ -2,15 +2,19 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { NutrientForm, NutrientFormValue } from "../components/NutrientForm";
-import { createDish } from "../lib/dishes";
+import { useToast } from "../components/Toast";
+import { useAuth } from "../contexts/AuthContext";
 import { takePendingScanDraft } from "../lib/draftStore";
+import { createMeal } from "../lib/meals";
 
 export default function ReviewScreen() {
   const router = useRouter();
+  const toast = useToast();
+  const { session } = useAuth();
   const [pending] = useState(() => takePendingScanDraft());
   const [saving, setSaving] = useState(false);
   const [value, setValue] = useState<NutrientFormValue>(() => ({
-    name: pending?.draft.name ?? "Unknown dish",
+    name: pending?.draft.name ?? "Unknown meal",
     servingSizeGrams: String(pending?.draft.servingSizeGrams ?? 200),
     per100g: pending?.draft.per100g ?? {
       calories: 0,
@@ -31,19 +35,26 @@ export default function ReviewScreen() {
   }
 
   async function handleSave() {
+    if (!session) {
+      Alert.alert("Sign in to save", "Create a free account or sign in to save this meal.", [
+        { text: "Not now", style: "cancel" },
+        { text: "Sign in", onPress: () => router.push("/login") },
+      ]);
+      return;
+    }
     setSaving(true);
     try {
-      await createDish({
+      await createMeal({
         name: value.name,
         source: "scan",
-        photoUrl: pending!.photoUrl,
+        photoUrl: pending!.photoUrl || null,
         servingSizeGrams: Number(value.servingSizeGrams) || 0,
         per100g: value.per100g,
       });
-      router.replace("/(tabs)/history");
+      toast.show("Saved to library");
+      router.replace("/(tabs)/library");
     } catch (err) {
       Alert.alert("Couldn't save", err instanceof Error ? err.message : "Unknown error");
-    } finally {
       setSaving(false);
     }
   }
@@ -56,7 +67,9 @@ export default function ReviewScreen() {
       </Text>
       <NutrientForm value={value} onChange={setValue} />
       <Pressable style={styles.button} onPress={handleSave} disabled={saving}>
-        <Text style={styles.buttonText}>{saving ? "Saving..." : "Save Dish"}</Text>
+        <Text style={styles.buttonText}>
+          {saving ? "Saving..." : session ? "Save Meal" : "Sign in to Save"}
+        </Text>
       </Pressable>
     </ScrollView>
   );

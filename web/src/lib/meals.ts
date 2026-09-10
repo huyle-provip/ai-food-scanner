@@ -1,7 +1,7 @@
-import { Dish, NutrientProfile } from "@food-scanner/shared";
+import { Meal, NutrientProfile } from "@food-scanner/shared";
 import { createClient } from "./supabase/server";
 
-interface DishRow {
+interface MealRow {
   id: string;
   user_id: string;
   name: string;
@@ -19,7 +19,7 @@ interface DishRow {
   updated_at: string;
 }
 
-function fromRow(row: DishRow): Dish {
+function fromRow(row: MealRow): Meal {
   return {
     id: row.id,
     userId: row.user_id,
@@ -39,19 +39,19 @@ function fromRow(row: DishRow): Dish {
   };
 }
 
-export async function listDishes(): Promise<Dish[]> {
+export async function listMeals(): Promise<Meal[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("dishes")
+    .from("meals")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return (data as DishRow[]).map(fromRow);
+  return (data as MealRow[]).map(fromRow);
 }
 
-export async function getDish(id: string): Promise<Dish | null> {
+export async function getMeal(id: string): Promise<Meal | null> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from("dishes").select("*").eq("id", id).maybeSingle();
+  const { data, error } = await supabase.from("meals").select("*").eq("id", id).maybeSingle();
   if (error) throw error;
-  return data ? fromRow(data as DishRow) : null;
+  return data ? fromRow(data as MealRow) : null;
 }

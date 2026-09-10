@@ -1,32 +1,49 @@
 import Link from "next/link";
-import { listDishes } from "@/lib/dishes";
+import { listPublishedRecipes } from "@/lib/recipes";
 import styles from "./page.module.css";
 
-export default async function DishesPage() {
-  const dishes = await listDishes();
-
-  if (dishes.length === 0) {
-    return (
-      <p>
-        No saved dishes yet. Scan a meal in the mobile app, or{" "}
-        <Link href="/add">add one manually</Link>.
-      </p>
-    );
-  }
+export default async function DiscoverPage() {
+  const recipes = await listPublishedRecipes();
 
   return (
-    <ul className={styles.list}>
-      {dishes.map((dish) => (
-        <li key={dish.id}>
-          <Link href={`/dish/${dish.id}`} className={styles.card}>
-            <span className={styles.name}>{dish.name}</span>
-            <span className={styles.meta}>
-              {dish.servingSizeGrams}g · {dish.calories.toFixed(0)} kcal ·{" "}
-              {dish.source === "scan" ? "scanned" : "manual"}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <section>
+      <h1 className={styles.heading}>Discover</h1>
+      {recipes.length === 0 ? (
+        <p>No recipes published yet.</p>
+      ) : (
+        <ul className={styles.grid}>
+          {recipes.map((recipe) => (
+            <li key={recipe.id}>
+              <Link href={`/recipe/${recipe.id}`} className={styles.card}>
+                {recipe.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={recipe.imageUrl} alt="" className={styles.image} />
+                ) : (
+                  <div className={styles.imagePlaceholder} />
+                )}
+                <div className={styles.cardBody}>
+                  <span className={styles.title}>{recipe.title}</span>
+                  {recipe.description ? (
+                    <span className={styles.description}>{recipe.description}</span>
+                  ) : null}
+                  <span className={styles.kcal}>
+                    {recipe.nutrition.calories.toFixed(0)} kcal · per serving
+                  </span>
+                  {recipe.tags.length > 0 ? (
+                    <span className={styles.tags}>
+                      {recipe.tags.map((tag) => (
+                        <span key={tag} className={styles.tag}>
+                          {tag}
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

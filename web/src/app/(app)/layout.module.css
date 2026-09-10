@@ -5,16 +5,29 @@
 }
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #e5e7eb;
+  background: var(--background);
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1.6rem;
+  color: #111827;
+  transition: color 0.15s ease;
+}
+
+.brand:hover {
+  color: #15803d;
 }
 
 .nav {
@@ -24,16 +37,60 @@
   font-size: 0.9375rem;
 }
 
+.link {
+  color: #15803d;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.link:hover {
+  color: #166534;
+  text-decoration: underline;
+}
+
+.signIn {
+  background: #16a34a;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  transition: background-color 0.15s ease;
+}
+
+.signIn:hover {
+  background: #15803d;
+}
+
 .signOut {
   background: none;
   border: none;
-  color: #dc2626;
+  color: #6b7280;
   font-size: 0.9375rem;
+  font-weight: 500;
   cursor: pointer;
   padding: 0;
+  transition: color 0.15s ease;
+}
+
+.signOut:hover {
+  color: #15803d;
 }
 
 .main {
   flex: 1;
   padding: 1.5rem;
+}
+
+/* Narrow screens: enlarge the brand mark (~1.5x) and let the nav wrap below
+   the brand instead of getting squeezed. */
+@media (max-width: 640px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .brand svg {
+    width: 30px;
+    height: 30px;
+  }
 }

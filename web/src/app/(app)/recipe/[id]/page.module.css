@@ -1,0 +1,133 @@
+.article {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.85rem;
+}
+
+.image {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 14px;
+  background: #f3f4f6;
+}
+
+.title {
+  font-size: 1.9rem;
+  font-weight: 800;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.tag {
+  font-size: 0.75rem;
+  color: #166534;
+  background: #dcfce7;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+}
+
+.description {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.55;
+  max-width: 52ch;
+}
+
+.sectionTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.nutrition {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid #ececec;
+  border-bottom: 1px solid #ececec;
+}
+
+.servings {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.nutrientGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(90px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.nutrient {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 0.4rem;
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+}
+
+.nutrientValue {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.nutrientLabel {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+/* Ingredients + instructions read as left-aligned text in a narrow centered
+   column (aligned with the nutrient grid above), not the full article width. */
+.block {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.5rem;
+}
+
+/* Heading centered like the Nutrition heading; the list/steps below stay left. */
+.block .sectionTitle {
+  align-self: center;
+}
+
+.ingredients {
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.instructions {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #333;
+  align-self: stretch;
+}
+
+/* Same hairline divider as the one framing the Nutrition block. */
+.divider {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #ececec;
+  margin: 0.25rem 0;
+}

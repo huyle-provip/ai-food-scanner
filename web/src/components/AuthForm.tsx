@@ -1,18 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import styles from "./page.module.css";
+import styles from "./AuthForm.module.css";
 
-export default function LoginPage() {
+export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+
+  const isSignIn = mode === "sign-in";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -21,29 +24,43 @@ export default function LoginPage() {
     setNotice(null);
     const supabase = createClient();
 
-    if (mode === "sign-in") {
+    if (isSignIn) {
       const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
       setLoading(false);
       if (authError) return setError(authError.message);
       router.replace("/");
       router.refresh();
     } else {
-      const { error: authError } = await supabase.auth.signUp({ email, password });
+      const { error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { display_name: name.trim() } },
+      });
       setLoading(false);
       if (authError) return setError(authError.message);
       setNotice("Check your email to confirm your account, then sign in.");
-      setMode("sign-in");
     }
   }
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h1 className={styles.title}>AI Food Scanner</h1>
+        <h1 className={styles.title}>{isSignIn ? "Sign in" : "Create an account"}</h1>
+        {!isSignIn && (
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Your name"
+            value={name}
+            maxLength={40}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        )}
         <input
           className={styles.input}
           type="email"
-          placeholder="Email"
+          placeholder="name@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -59,15 +76,21 @@ export default function LoginPage() {
         {error && <p className={styles.error}>{error}</p>}
         {notice && <p className={styles.notice}>{notice}</p>}
         <button className={styles.button} type="submit" disabled={loading}>
-          {loading ? "Please wait..." : mode === "sign-in" ? "Sign In" : "Sign Up"}
+          {loading ? "Please wait..." : isSignIn ? "Sign In" : "Sign Up"}
         </button>
-        <button
-          type="button"
-          className={styles.switch}
-          onClick={() => setMode(mode === "sign-in" ? "sign-up" : "sign-in")}
-        >
-          {mode === "sign-in" ? "Need an account? Sign up" : "Have an account? Sign in"}
-        </button>
+        {isSignIn && (
+          <p className={styles.switchRow}>
+            <Link className={styles.switch} href="/forgot-password">
+              Forgot password?
+            </Link>
+          </p>
+        )}
+        <p className={styles.switchRow}>
+          {isSignIn ? "Need an account? " : "Have an account? "}
+          <Link className={styles.switch} href={isSignIn ? "/signup" : "/login"}>
+            {isSignIn ? "Sign up" : "Sign in"}
+          </Link>
+        </p>
       </form>
     </div>
   );

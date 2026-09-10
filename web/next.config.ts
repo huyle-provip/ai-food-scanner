@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   // (linked via npm workspaces) resolves correctly and to silence the
   // multi-lockfile root inference warning.
   outputFileTracingRoot: path.join(__dirname, ".."),
+  // Dev-only on-screen indicator (not shipped in production). Move it out of
+  // the way of the centered page content on narrow viewports.
+  devIndicators: { position: "bottom-right" },
 };
 
 export default nextConfig;

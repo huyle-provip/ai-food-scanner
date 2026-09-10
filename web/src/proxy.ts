@@ -35,15 +35,24 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
+  const { pathname } = request.nextUrl;
 
-  if (!user && !isAuthRoute) {
+  const isAuthPage = pathname === "/login" || pathname === "/signup";
+  const isPasswordFlow = pathname === "/forgot-password" || pathname === "/reset-password";
+
+  // Public routes: the recipe feed, recipe detail pages, and the auth pages.
+  const isPublic =
+    pathname === "/" || pathname.startsWith("/recipe/") || isAuthPage || isPasswordFlow;
+
+  // Everything else (library, meal editing, manual add, admin) needs a session.
+  // The /admin subtree additionally checks `profiles.is_admin` in its own layout.
+  if (!user && !isPublic) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  if (user && isAuthRoute) {
+  if (user && isAuthPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);

@@ -1,7 +1,7 @@
 "use client";
 
 import { NutrientForm } from "@/components/NutrientForm";
-import { createManualDish } from "@/lib/actions";
+import { createManualMeal } from "@/lib/actions";
 
 const empty = {
   name: "",
@@ -9,12 +9,12 @@ const empty = {
   per100g: { calories: 0, proteinG: 0, carbsG: 0, fatG: 0, fiberG: 0, sodiumMg: 0 },
 };
 
-export default function AddDishPage() {
+export default function AddMealPage() {
   return (
     <NutrientForm
       initialValue={empty}
-      submitLabel="Save Dish"
-      onSubmit={(input) => createManualDish(input)}
+      submitLabel="Save Meal"
+      onSubmit={(input) => createManualMeal(input)}
     />
   );
 }

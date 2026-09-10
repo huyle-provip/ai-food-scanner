@@ -5,11 +5,12 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "AI Food Scanner uses the camera to photograph your meals and estimate calories and nutrients."
+        "NSCameraUsageDescription": "AI Food Scanner uses the camera to photograph your meals and estimate calories and nutrients.",
+        "NSPhotoLibraryUsageDescription": "AI Food Scanner lets you pick a meal photo from your gallery to estimate its calories and nutrients."
       }
     },
     "plugins": [
@@ -18,6 +19,12 @@
         "expo-camera",
         {
           "cameraPermission": "AI Food Scanner uses the camera to photograph your meals and estimate calories and nutrients."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "AI Food Scanner lets you pick a meal photo from your gallery to estimate its calories and nutrients."
         }
       ]
     ],
