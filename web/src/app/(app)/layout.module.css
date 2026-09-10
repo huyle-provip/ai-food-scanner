@@ -17,8 +17,11 @@
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1.6rem;
   color: #111827;
   transition: color 0.15s ease;
 }
@@ -76,4 +79,18 @@
 .main {
   flex: 1;
   padding: 1.5rem;
+}
+
+/* Narrow screens: enlarge the brand mark (~1.5x) and let the nav wrap below
+   the brand instead of getting squeezed. */
+@media (max-width: 640px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .brand svg {
+    width: 30px;
+    height: 30px;
+  }
 }

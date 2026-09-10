@@ -63,6 +63,11 @@
   font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.submit:hover:not(:disabled) {
+  background: #15803d;
 }
 
 .submit:disabled {

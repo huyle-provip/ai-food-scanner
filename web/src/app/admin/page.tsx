@@ -8,7 +8,11 @@ export default async function AdminRecipesPage() {
   if (recipes.length === 0) {
     return (
       <p>
-        No recipes yet. <Link href="/admin/new">Create the first one</Link>.
+        No recipes yet.{" "}
+        <Link href="/admin/new" className={styles.inlineLink}>
+          Create the first one
+        </Link>
+        .
       </p>
     );
   }

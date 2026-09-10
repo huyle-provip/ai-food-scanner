@@ -37,6 +37,11 @@
   font-weight: 600;
   cursor: pointer;
   margin-top: 0.25rem;
+  transition: background-color 0.15s ease;
+}
+
+.button:hover:not(:disabled) {
+  background: #15803d;
 }
 
 .button:disabled {

@@ -43,3 +43,14 @@
   color: #92400e;
   background: #fef3c7;
 }
+
+.inlineLink {
+  color: #15803d;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.inlineLink:hover {
+  color: #166534;
+  text-decoration: underline;
+}
