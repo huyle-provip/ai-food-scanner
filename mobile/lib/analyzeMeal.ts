@@ -1,8 +1,20 @@
 import { MealAnalysisDraft } from "@food-scanner/shared";
+import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import { supabase } from "./supabase";
 
 /**
- * Uploads a captured meal photo to the user's private Storage folder and
+ * Re-encodes any source image (camera capture or gallery pick, incl. HEIC/PNG)
+ * to a resized JPEG. Keeps uploads small and guarantees a format the vision
+ * model accepts.
+ */
+async function normalizeToJpeg(uri: string): Promise<string> {
+  const rendered = await ImageManipulator.manipulate(uri).resize({ width: 1024 }).renderAsync();
+  const result = await rendered.saveAsync({ compress: 0.7, format: SaveFormat.JPEG });
+  return result.uri;
+}
+
+/**
+ * Normalizes a meal photo, uploads it to the user's private Storage folder, and
  * invokes the `analyze-meal` Edge Function to get a draft nutrient estimate.
  */
 export async function analyzeMealPhoto(localUri: string): Promise<{
@@ -14,7 +26,8 @@ export async function analyzeMealPhoto(localUri: string): Promise<{
   const userId = userData.user?.id;
   if (!userId) throw new Error("Not signed in");
 
-  const response = await fetch(localUri);
+  const jpegUri = await normalizeToJpeg(localUri);
+  const response = await fetch(jpegUri);
   const arrayBuffer = await response.arrayBuffer();
   const path = `${userId}/${Date.now()}.jpg`;
 
