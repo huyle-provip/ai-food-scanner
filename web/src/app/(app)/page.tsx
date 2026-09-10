@@ -26,6 +26,9 @@ export default async function DiscoverPage() {
                   {recipe.description ? (
                     <span className={styles.description}>{recipe.description}</span>
                   ) : null}
+                  <span className={styles.kcal}>
+                    {recipe.nutrition.calories.toFixed(0)} kcal · per serving
+                  </span>
                   {recipe.tags.length > 0 ? (
                     <span className={styles.tags}>
                       {recipe.tags.map((tag) => (

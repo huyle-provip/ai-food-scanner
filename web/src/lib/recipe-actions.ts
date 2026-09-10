@@ -16,6 +16,13 @@ function toRow(input: RecipeInput) {
     ingredients: input.ingredients,
     instructions: input.instructions,
     tags: input.tags,
+    servings: input.servings,
+    calories: input.nutrition.calories,
+    protein_g: input.nutrition.proteinG,
+    carbs_g: input.nutrition.carbsG,
+    fat_g: input.nutrition.fatG,
+    fiber_g: input.nutrition.fiberG,
+    sodium_mg: input.nutrition.sodiumMg,
     is_published: input.isPublished,
   };
 }

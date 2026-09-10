@@ -21,6 +21,13 @@ export function RecipeEditor({ recipe, updateAction, deleteAction }: Props) {
     ingredientsText: recipe.ingredients.join("\n"),
     instructions: recipe.instructions,
     tagsText: recipe.tags.join(", "),
+    servings: String(recipe.servings),
+    calories: String(recipe.nutrition.calories),
+    proteinG: String(recipe.nutrition.proteinG),
+    carbsG: String(recipe.nutrition.carbsG),
+    fatG: String(recipe.nutrition.fatG),
+    fiberG: String(recipe.nutrition.fiberG),
+    sodiumMg: String(recipe.nutrition.sodiumMg),
     isPublished: recipe.isPublished,
   };
 

@@ -44,6 +44,8 @@ export interface Recipe {
   ingredients: string[];
   instructions: string;
   tags: string[];
+  servings: number;
+  nutrition: NutrientProfile;
   isPublished: boolean;
   createdAt: string;
   updatedAt: string;
@@ -57,6 +59,8 @@ export interface RecipeInput {
   ingredients: string[];
   instructions: string;
   tags: string[];
+  servings: number;
+  nutrition: NutrientProfile;
   isPublished: boolean;
 }
 

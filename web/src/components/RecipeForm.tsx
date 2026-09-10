@@ -1,6 +1,6 @@
 "use client";
 
-import { RecipeInput } from "@food-scanner/shared";
+import { NutrientProfile, RecipeInput } from "@food-scanner/shared";
 import { useState, useTransition, type ReactNode } from "react";
 import styles from "./RecipeForm.module.css";
 
@@ -11,6 +11,13 @@ export interface RecipeFormValue {
   ingredientsText: string; // one ingredient per line
   instructions: string;
   tagsText: string; // comma-separated
+  servings: string;
+  calories: string;
+  proteinG: string;
+  carbsG: string;
+  fatG: string;
+  fiberG: string;
+  sodiumMg: string;
   isPublished: boolean;
 }
 
@@ -21,10 +28,27 @@ export const emptyRecipeForm: RecipeFormValue = {
   ingredientsText: "",
   instructions: "",
   tagsText: "",
+  servings: "1",
+  calories: "0",
+  proteinG: "0",
+  carbsG: "0",
+  fatG: "0",
+  fiberG: "0",
+  sodiumMg: "0",
   isPublished: false,
 };
 
+const num = (s: string) => Number(s) || 0;
+
 function toInput(v: RecipeFormValue): RecipeInput {
+  const nutrition: NutrientProfile = {
+    calories: num(v.calories),
+    proteinG: num(v.proteinG),
+    carbsG: num(v.carbsG),
+    fatG: num(v.fatG),
+    fiberG: num(v.fiberG),
+    sodiumMg: num(v.sodiumMg),
+  };
   return {
     title: v.title.trim(),
     description: v.description.trim(),
@@ -38,6 +62,8 @@ function toInput(v: RecipeFormValue): RecipeInput {
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean),
+    servings: Math.max(1, Math.round(num(v.servings) || 1)),
+    nutrition,
     isPublished: v.isPublished,
   };
 }
@@ -69,6 +95,18 @@ export function RecipeForm({ initialValue, submitLabel, onSubmit, extraActions }
       }
     });
   }
+
+  const numberField = (key: keyof RecipeFormValue, label: string) => (
+    <label className={styles.field} key={key}>
+      <span>{label}</span>
+      <input
+        type="number"
+        step="any"
+        value={value[key] as string}
+        onChange={(e) => set(key, e.target.value as never)}
+      />
+    </label>
+  );
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -122,6 +160,17 @@ export function RecipeForm({ initialValue, submitLabel, onSubmit, extraActions }
           placeholder="healthy, high-protein"
         />
       </label>
+
+      <h3 className={styles.sectionTitle}>Nutrition (per serving)</h3>
+      <div className={styles.grid}>
+        {numberField("servings", "Servings")}
+        {numberField("calories", "Calories (kcal)")}
+        {numberField("proteinG", "Protein (g)")}
+        {numberField("carbsG", "Carbs (g)")}
+        {numberField("fatG", "Fat (g)")}
+        {numberField("fiberG", "Fiber (g)")}
+        {numberField("sodiumMg", "Sodium (mg)")}
+      </div>
 
       <label className={styles.checkbox}>
         <input

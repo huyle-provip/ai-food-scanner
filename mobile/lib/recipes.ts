@@ -9,6 +9,13 @@ interface RecipeRow {
   ingredients: string[];
   instructions: string;
   tags: string[];
+  servings: number;
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  fiber_g: number;
+  sodium_mg: number;
   is_published: boolean;
   created_at: string;
   updated_at: string;
@@ -23,6 +30,15 @@ function fromRow(row: RecipeRow): Recipe {
     ingredients: row.ingredients ?? [],
     instructions: row.instructions,
     tags: row.tags ?? [],
+    servings: row.servings,
+    nutrition: {
+      calories: row.calories,
+      proteinG: row.protein_g,
+      carbsG: row.carbs_g,
+      fatG: row.fat_g,
+      fiberG: row.fiber_g,
+      sodiumMg: row.sodium_mg,
+    },
     isPublished: row.is_published,
     createdAt: row.created_at,
     updatedAt: row.updated_at,

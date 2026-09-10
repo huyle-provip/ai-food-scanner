@@ -16,6 +16,9 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
             {recipe.description}
           </Text>
         ) : null}
+        <Text style={styles.kcal}>
+          {recipe.nutrition.calories.toFixed(0)} kcal · per serving
+        </Text>
         {recipe.tags.length > 0 ? (
           <View style={styles.tagRow}>
             {recipe.tags.map((tag) => (
@@ -43,6 +46,7 @@ const styles = StyleSheet.create({
   body: { padding: 14, gap: 6 },
   title: { fontSize: 17, fontWeight: "700" },
   description: { fontSize: 14, color: "#555" },
+  kcal: { fontSize: 12, color: "#166534", fontWeight: "600" },
   tagRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 2 },
   tag: {
     fontSize: 12,
