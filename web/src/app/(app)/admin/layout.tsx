@@ -10,19 +10,14 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   return (
     <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <div className={styles.brandRow}>
-          <span className={styles.brand}>Recipe Admin</span>
-          <Link href="/" className={styles.exit}>
-            ← Back to site
-          </Link>
-        </div>
+      <div className={styles.bar}>
+        <h1 className={styles.heading}>Recipe Admin</h1>
         <nav className={styles.nav}>
           <Link href="/admin">All recipes</Link>
           <Link href="/admin/new">+ New recipe</Link>
         </nav>
-      </header>
-      <main className={styles.main}>{children}</main>
+      </div>
+      {children}
     </div>
   );
 }
