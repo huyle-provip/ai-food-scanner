@@ -36,6 +36,30 @@ export interface MealAnalysisDraft {
   notes?: string;
 }
 
+export interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  ingredients: string[];
+  instructions: string;
+  tags: string[];
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Editable fields for creating/updating a recipe from the admin UI. */
+export interface RecipeInput {
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  ingredients: string[];
+  instructions: string;
+  tags: string[];
+  isPublished: boolean;
+}
+
 export function scaleNutrients(per100g: NutrientProfile, servingSizeGrams: number): NutrientProfile {
   const factor = servingSizeGrams / 100;
   return {
