@@ -62,16 +62,3 @@ export async function deleteRecipe(id: string) {
   revalidatePath("/admin");
   redirect("/admin");
 }
-
-export async function setRecipePublished(id: string, isPublished: boolean) {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("recipes")
-    .update({ is_published: isPublished })
-    .eq("id", id);
-  if (error) throw error;
-
-  revalidatePath("/");
-  revalidatePath("/admin");
-  revalidatePath(`/recipe/${id}`);
-}
