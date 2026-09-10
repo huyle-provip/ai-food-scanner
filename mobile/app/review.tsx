@@ -2,12 +2,14 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { NutrientForm, NutrientFormValue } from "../components/NutrientForm";
+import { useToast } from "../components/Toast";
 import { useAuth } from "../contexts/AuthContext";
 import { takePendingScanDraft } from "../lib/draftStore";
 import { createMeal } from "../lib/meals";
 
 export default function ReviewScreen() {
   const router = useRouter();
+  const toast = useToast();
   const { session } = useAuth();
   const [pending] = useState(() => takePendingScanDraft());
   const [saving, setSaving] = useState(false);
@@ -49,10 +51,10 @@ export default function ReviewScreen() {
         servingSizeGrams: Number(value.servingSizeGrams) || 0,
         per100g: value.per100g,
       });
+      toast.show("Saved to library");
       router.replace("/(tabs)/library");
     } catch (err) {
       Alert.alert("Couldn't save", err instanceof Error ? err.message : "Unknown error");
-    } finally {
       setSaving(false);
     }
   }

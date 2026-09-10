@@ -34,8 +34,8 @@ export async function createManualMeal(input: MealFormInput) {
   });
   if (error) throw error;
 
-  revalidatePath("/");
-  redirect("/");
+  revalidatePath("/library");
+  redirect("/library?saved=1");
 }
 
 export async function updateMeal(id: string, input: MealFormInput) {
@@ -57,8 +57,8 @@ export async function updateMeal(id: string, input: MealFormInput) {
     .eq("id", id);
   if (error) throw error;
 
-  revalidatePath("/");
-  redirect("/");
+  revalidatePath("/library");
+  redirect("/library?saved=1");
 }
 
 export async function deleteMeal(id: string) {
@@ -66,8 +66,8 @@ export async function deleteMeal(id: string) {
   const { error } = await supabase.from("meals").delete().eq("id", id);
   if (error) throw error;
 
-  revalidatePath("/");
-  redirect("/");
+  revalidatePath("/library");
+  redirect("/library?deleted=1");
 }
 
 export async function signOut() {
