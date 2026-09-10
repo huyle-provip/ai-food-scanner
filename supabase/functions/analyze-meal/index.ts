@@ -1,9 +1,10 @@
-// Supabase Edge Function (Deno runtime): given a photo already uploaded to the
-// user's private `meal-photos` storage folder, identifies the meal with Claude
-// vision, looks up authoritative per-100g nutrients from USDA FoodData Central
-// when a match is found, and returns a draft for the client to review/edit
-// before it gets saved as a `meals` row. Nothing is written to the database
-// here -- the client does that after the user confirms/edits the draft.
+// Supabase Edge Function (Deno runtime): given a meal photo -- sent inline by an
+// anonymous caller, or already uploaded to a signed-in user's private
+// `meal-photos` storage folder -- identifies the meal with Claude vision, looks
+// up authoritative per-100g nutrients from USDA FoodData Central when a match is
+// found, and returns a draft for the client to review/edit before it gets saved
+// as a `meals` row. Nothing is written to the database here -- the client does
+// that (only when signed in) after the user confirms/edits the draft.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY")!;
@@ -51,40 +52,46 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return jsonResponse({ error: "Missing Authorization header" }, 401);
-    }
+    const { photoPath, imageBase64 } = await req.json();
 
-    const { photoPath } = await req.json();
-    if (!photoPath || typeof photoPath !== "string") {
-      return jsonResponse({ error: "photoPath is required" }, 400);
-    }
+    // Scanning a meal does not require an account. Two ways in:
+    //   - `imageBase64`: anonymous/inline -- the client sends the JPEG bytes
+    //     directly and nothing is written to Storage.
+    //   - `photoPath`: signed-in -- the photo was already uploaded to the
+    //     caller's private `meal-photos` folder; verify the JWT, then read it.
+    let photoBase64: string;
 
-    // Verify the caller's JWT with the anon-key client (does not bypass RLS),
-    // then use a service-role client only to read the already-authorized path.
-    const authedClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: userData, error: userError } = await authedClient.auth.getUser();
-    if (userError || !userData.user) {
-      return jsonResponse({ error: "Invalid session" }, 401);
-    }
+    if (typeof imageBase64 === "string" && imageBase64.length > 0) {
+      photoBase64 = imageBase64;
+    } else if (typeof photoPath === "string" && photoPath.length > 0) {
+      const authHeader = req.headers.get("Authorization");
+      if (!authHeader) {
+        return jsonResponse({ error: "Missing Authorization header" }, 401);
+      }
+      // Verify the caller's JWT with the anon-key client (does not bypass RLS),
+      // then use a service-role client only to read the already-authorized path.
+      const authedClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userData, error: userError } = await authedClient.auth.getUser();
+      if (userError || !userData.user) {
+        return jsonResponse({ error: "Invalid session" }, 401);
+      }
+      if (!photoPath.startsWith(`${userData.user.id}/`)) {
+        return jsonResponse({ error: "photoPath does not belong to the caller" }, 403);
+      }
 
-    const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    if (!photoPath.startsWith(`${userData.user.id}/`)) {
-      return jsonResponse({ error: "photoPath does not belong to the caller" }, 403);
+      const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      const { data: photoBlob, error: downloadError } = await admin.storage
+        .from("meal-photos")
+        .download(photoPath);
+      if (downloadError || !photoBlob) {
+        return jsonResponse({ error: `Could not read photo: ${downloadError?.message}` }, 404);
+      }
+      photoBase64 = arrayBufferToBase64(await photoBlob.arrayBuffer());
+    } else {
+      return jsonResponse({ error: "Provide imageBase64 or photoPath" }, 400);
     }
-
-    const { data: photoBlob, error: downloadError } = await admin.storage
-      .from("meal-photos")
-      .download(photoPath);
-    if (downloadError || !photoBlob) {
-      return jsonResponse({ error: `Could not read photo: ${downloadError?.message}` }, 404);
-    }
-    // Photo is downloaded even in mock mode, so the real Storage/RLS path is
-    // still exercised -- only the paid external API calls are skipped below.
-    const photoBase64 = arrayBufferToBase64(await photoBlob.arrayBuffer());
 
     if (MOCK_ANALYSIS) {
       return jsonResponse(pickMockEstimate(), 200);

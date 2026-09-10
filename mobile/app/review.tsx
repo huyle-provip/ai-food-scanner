@@ -47,7 +47,7 @@ export default function ReviewScreen() {
       await createMeal({
         name: value.name,
         source: "scan",
-        photoUrl: pending!.photoUrl,
+        photoUrl: pending!.photoUrl || null,
         servingSizeGrams: Number(value.servingSizeGrams) || 0,
         per100g: value.per100g,
       });
